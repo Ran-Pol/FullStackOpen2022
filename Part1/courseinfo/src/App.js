@@ -1,18 +1,11 @@
 import { useState } from 'react'
 
-const Display = ({counter}) => {
-  return (
-    <div>{counter}</div>
-  )
-}
+const Display = ({counter}) =><div>{counter}</div>
 
-const Button = ({onClick, text}) => {
-  return (
-    <button onClick={onClick}>
-      {text}
-    </button>
-  )
-}
+
+const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
+
+
 
 
 const App = () => {
@@ -25,6 +18,9 @@ const App = () => {
   return (
   <>
       <Display counter={counter}/>
+      {/* When one of the buttons is clicked, the event handler is executed. 
+      The event handler changes the state of the App component with the setCounter function. 
+      Calling a function which changes the state causes the component to rerender. */}
       <Button onClick={increaseByOne} text="plus"/>
       <Button onClick={decreaseByOne} text="minus"/>
       <Button onClick={setToZero} text="zero"/>
