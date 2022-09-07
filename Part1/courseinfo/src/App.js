@@ -1,28 +1,40 @@
 import { useState } from 'react'
 
-const Display = ({counter}) =><div>{counter}</div>
-
-const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
-
 const App = () => {
-  const [ counter, setCounter ] = useState(0)
-  const increaseByOne = () => setCounter(counter + 1)
-  const decreaseByOne = () => setCounter(counter - 1)
+  const [clicks, setClicks] = useState({
+    left: 0, right: 0
+  })
+
+  // const handleLeftClick = () => {
+  //   const newClicks = { 
+  //     left: clicks.left + 1, 
+  //     right: clicks.right 
+  //   }
+  //   setClicks(newClicks)
+  // }
+
+  // const handleRightClick = () => {
+  //   const newClicks = { 
+  //     left: clicks.left, 
+  //     right: clicks.right + 1 
+  //   }
+  //   setClicks(newClicks)
+  // }
+
+  const handleLeftClick = () =>
+  setClicks({ ...clicks, left: clicks.left + 1 })
+
+const handleRightClick = () =>
+  setClicks({ ...clicks, right: clicks.right + 1 })
   
-  const setToZero = () => setCounter(0)
-
   return (
-  <>
-      <Display counter={counter}/>
-      {/* When one of the buttons is clicked, the event handler is executed. 
-      The event handler changes the state of the App component with the setCounter function. 
-      Calling a function which changes the state causes the component to rerender. */}
-      <Button onClick={increaseByOne} text="plus"/>
-      <Button onClick={decreaseByOne} text="minus"/>
-      <Button onClick={setToZero} text="zero"/>
-</>
-
+    <div>
+      {clicks.left}
+      <button onClick={handleLeftClick}>left</button>
+      <button onClick={handleRightClick}>right</button>
+      {clicks.right}
+    </div>
   )
-}  
+}
 
 export default App
