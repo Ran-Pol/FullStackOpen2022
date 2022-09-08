@@ -2,6 +2,17 @@ import { useState } from 'react'
 
 const Button = ({handleCLick, text}) => <button onClick={() => handleCLick()}>{text}</button>
 
+const MostVotes = ({votesArray, allAnectodes}) => {
+const sortedArray = votesArray.map((a,b) => [a,b]).sort((a,b)=> a[0] - b[0]);  
+const [numVotes, index] = sortedArray[allAnectodes.length-1]
+if (numVotes){
+  return(
+<p>{allAnectodes[index]} has {numVotes}</p>
+  )
+}
+return <p>No Votes Yet</p>
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -28,12 +39,19 @@ const App = () => {
 
   return (
     <div>
+      <h2>Anecdote of the day</h2>
       <p>{anecdotes[selected]} has a total of {votesCount[selected]} votes</p>
       <Button handleCLick={seToVotesCount} text="vote"/>
       <Button handleCLick={setToGoodValue} text="Next anecdote"/>
+      <h2>Anecdote with most votes</h2>
+      <MostVotes votesArray={votesCount} allAnectodes={anecdotes}/>
     </div>
 
   )
 }
 
 export default App
+
+
+
+
