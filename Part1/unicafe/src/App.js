@@ -1,28 +1,33 @@
 import { useState } from 'react'
 
 
-const Display = (props) => <div>{props.text} {props.value}</div>
+const Display = (props) => <tr><td>{props.text}</td><td>{props.value}</td></tr>
 
 const Button =  (props) => (
 <button onClick={() => props.handleClick()}>{props.text}</button>
 )
 
-const StatisticLine = (props) => (
-  props.text === "positive"? <div>{props.text} {props.value}%</div>: <div>{props.text} {props.value}</div>
-)
+const StatisticLine = (props) =>{
+  if(props.text === "positive"){
+    return <tr><td>{props.text}</td><td>{props.value}%</td></tr>
+  }
+  return <tr><td>{props.text}</td><td>{props.value}</td></tr>
+}
 
 const Statistics = (props) => {
   const {goodValue,neutralValue, badValue, allFeedback, avgFeedback, avgPosFeedback } = props.value
   if(allFeedback){
 return(
-  <div>
+<table>
+<tbody>
   <Display text="good" value={goodValue}/>
   <Display text="Neutral" value={neutralValue}/>
   <Display text="Bad" value={badValue}/>
   <StatisticLine text="all" value={allFeedback}/>
   <StatisticLine text="average" value={avgFeedback ?avgFeedback: 0 }/>
   <StatisticLine text="positive" value={(avgPosFeedback ?avgPosFeedback: 0) * 100 }/>
-  </div>
+  </tbody>
+</table>
 )}
 return <div>No feedback given</div>
 }
@@ -69,6 +74,3 @@ avgFeedback: (goodValue - badValue)/allFeedback,
 }
 
 export default App
-
-// 1.9: unicafe step4
-// Change your application to display statistics only once feedback has been gathered.
