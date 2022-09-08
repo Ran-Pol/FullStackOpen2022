@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Button = (props) => <button onClick={() => props.handleCLick()}>Next anecdote</button>
+const Button = ({handleCLick, text}) => <button onClick={() => handleCLick()}>{text}</button>
 
 const App = () => {
   const anecdotes = [
@@ -12,19 +12,25 @@ const App = () => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.'
   ]
-
-  const [selected, setSelected] = useState(0)
   const max = anecdotes.length;
-  // console.log(Math.floor(Math.random() * max));
+  const [selected, setSelected] = useState(0)
+  const [votesCount, setVoteCount] = useState(Array(max).fill(0,0))
 
   const setToGoodValue = () => {
     setSelected(Math.floor(Math.random() * max))
   }
 
+  const seToVotesCount = () => {
+    const newArray = [...votesCount];
+    newArray[selected] += 1;
+    setVoteCount(newArray);
+  }
+
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <Button handleCLick={setToGoodValue} />
+      <p>{anecdotes[selected]} has a total of {votesCount[selected]} votes</p>
+      <Button handleCLick={seToVotesCount} text="vote"/>
+      <Button handleCLick={setToGoodValue} text="Next anecdote"/>
     </div>
 
   )
