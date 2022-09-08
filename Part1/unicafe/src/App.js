@@ -7,11 +7,11 @@ const Button =  (props) => (
 <button onClick={() => props.handleClick()}>{props.text}</button>
 )
 
-const Statistics = (props) => (
+const StatisticLine = (props) => (
   props.text === "positive"? <div>{props.text} {props.value}%</div>: <div>{props.text} {props.value}</div>
 )
 
-const ConditonalStatistics = (props) => {
+const Statistics = (props) => {
   const {goodValue,neutralValue, badValue, allFeedback, avgFeedback, avgPosFeedback } = props.value
   if(allFeedback){
 return(
@@ -19,9 +19,9 @@ return(
   <Display text="good" value={goodValue}/>
   <Display text="Neutral" value={neutralValue}/>
   <Display text="Bad" value={badValue}/>
-  <Statistics text="all" value={allFeedback}/>
-  <Statistics text="average" value={avgFeedback ?avgFeedback: 0 }/>
-  <Statistics text="positive" value={(avgPosFeedback ?avgPosFeedback: 0) * 100 }/>
+  <StatisticLine text="all" value={allFeedback}/>
+  <StatisticLine text="average" value={avgFeedback ?avgFeedback: 0 }/>
+  <StatisticLine text="positive" value={(avgPosFeedback ?avgPosFeedback: 0) * 100 }/>
   </div>
 )}
 return <div>No feedback given</div>
@@ -63,7 +63,7 @@ avgFeedback: (goodValue - badValue)/allFeedback,
       <Button handleClick={() => seTotNeutralValue(neutralValue + 1)} text="Neutral"/>
       <Button handleClick={() => setTBaddValue(badValue + 1)} text="Bad" />
       <h2>Statistics</h2>
-<ConditonalStatistics value={valueObj}/>
+<Statistics value={valueObj}/>
     </div>
   )
 }
