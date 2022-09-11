@@ -6,6 +6,7 @@ const Content = ({ parts }) => {
       {parts.map((item) => (
         <Part key={item.id} item={item} />
       ))}
+      <p><strong>Total of {parts.reduce((total, item) => (total += item.exercises), 0)} excercises</strong></p>
     </div>
   );
 };
