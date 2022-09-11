@@ -6,18 +6,21 @@ const App = () => {
 
   const addContactHandeler = (event) => {
     event.preventDefault();
+    const doesNameExist = persons
+      .map(({ name }) => name)
+      .includes(newName.trim());
+
+    if (doesNameExist) {
+      alert(`${newName.trim()} is already added to phonebook`);
+      return;
+    }
     const newContact = [
       {
-        name: newName,
+        name: newName.trim(),
       },
     ];
     setPersons(persons.concat(newContact));
     setNewName("");
-  };
-
-  const onChangeHandel = (event) => {
-    // console.log(event.target.value);
-    setNewName(event.target.value);
   };
 
   return (
@@ -25,7 +28,8 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={addContactHandeler}>
         <div>
-          name: <input onChange={onChangeHandel} value={newName} />
+          name:{" "}
+          <input onChange={(e) => setNewName(e.target.value)} value={newName} />
         </div>
         <div>
           <button type="submit">add</button>
