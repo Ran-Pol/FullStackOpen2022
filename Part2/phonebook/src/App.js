@@ -33,13 +33,13 @@ const App = () => {
     const newFilterList = persons.filter(({ name }) =>
       name.trim().toLowerCase().includes(newWord)
     );
-
     return newFilterList;
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      {/* Component Filter Input */}
       <div>
         Filter Phonebook:
         <input
@@ -47,6 +47,7 @@ const App = () => {
           placeholder="Filter phonebook"
         />
       </div>
+      {/* Component Form */}
       <form onSubmit={addContactHandeler}>
         <h3>Add a new contact</h3>
         <div>
@@ -70,6 +71,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
+       {/* Component Persons */}
       {newFilter.trim()
         ? applyFilter(newFilter).map(({ name, number }, i) => (
             <p key={i}>
