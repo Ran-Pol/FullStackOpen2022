@@ -1,13 +1,22 @@
-import { useState } from "react";
+import axios from "axios";
+import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import Form from "./components/Form";
 import PersonList from "./components/PersonList";
-import { bookList } from "./data/bookList";
+
 const App = () => {
-  const [persons, setPersons] = useState(bookList);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [newFilter, setNewFilterWord] = useState("");
+
+  const hook = () => {
+    axios.get("http://localhost:3001/persons").then((response) => {
+      setPersons(response.data);
+    });
+  };
+
+  useEffect(hook, []);
 
   const addContactHandeler = (event) => {
     event.preventDefault();
