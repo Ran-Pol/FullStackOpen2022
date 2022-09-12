@@ -21,7 +21,7 @@ const App = () => {
   const addContactHandeler = (event) => {
     event.preventDefault();
     const doesNameExist = persons
-      .map(({ name }) => name)
+      .map(({ name }) => name.trim())
       .includes(newName.trim());
 
     if (doesNameExist) {
