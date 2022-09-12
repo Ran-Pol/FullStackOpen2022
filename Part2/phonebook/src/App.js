@@ -1,9 +1,11 @@
 import { useState } from "react";
-
+import { bookList } from "./data/bookList";
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas", phone:"1-800-234-3333"}]);
+  const [persons, setPersons] = useState(bookList);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
+  const [newFilter, setNewFilterWord] = useState("");
+
 
   const addContactHandeler = (event) => {
     event.preventDefault();
@@ -18,7 +20,7 @@ const App = () => {
     const newContact = [
       {
         name: newName.trim(),
-        phone: newPhone
+        number: newPhone,
       },
     ];
     setPersons(persons.concat(newContact));
@@ -26,26 +28,59 @@ const App = () => {
     setNewPhone("");
   };
 
+  const applyFilter = (word) => {
+    const newWord = word.trim().toLowerCase();
+    const newFilterList = persons.filter(({ name }) =>
+      name.trim().toLowerCase().includes(newWord)
+    );
+
+    return newFilterList;
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        Filter Phonebook:
+        <input
+          onChange={(e) => setNewFilterWord(e.target.value)}
+          placeholder="Filter phonebook"
+        />
+      </div>
       <form onSubmit={addContactHandeler}>
+        <h3>Add a new contact</h3>
         <div>
-          Name:{" "}
-          <input onChange={(e) => setNewName(e.target.value)} value={newName} placeholder="Enter fullname"/>
+          Name:
+          <input
+            onChange={(e) => setNewName(e.target.value)}
+            value={newName}
+            placeholder="Enter fullname"
+          />
         </div>
         <div>
-          Phone:{" "}
-          <input onChange={(e) => setNewPhone(e.target.value)} value={newPhone} placeholder="Enter phone number"/>
+          Phone:
+          <input
+            onChange={(e) => setNewPhone(e.target.value)}
+            value={newPhone}
+            placeholder="Enter phone number"
+          />
         </div>
         <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map(({name,phone}, i) => (
-        <p key={i}>{name} {phone}</p>
-      ))}
+      {newFilter.trim()
+        ? applyFilter(newFilter).map(({ name, number }, i) => (
+            <p key={i}>
+              {name} {number}
+            </p>
+          ))
+        : persons.map(({ name, number }, i) => (
+            <p key={i}>
+              {name} {number}
+            </p>
+          ))}
     </div>
   );
 };
