@@ -3,13 +3,14 @@ const ListOfCountries = ({ applyFilter, filterName }) => {
   const listResults = filteredCountries.map(({ name: { common } }, i) => (
     <p key={i}>{common}</p>
   ));
-  const lteTen_gTZero =
+  let lteTen_gTZero =
     listResults.length > 0 && listResults.length <= 10
       ? // If the first test passes succesfully then we will be send an array.
         listResults
       : listResults.length > 10 && filterName.trim().length
       ? "Too many matches, specify another filter"
       : "No results...";
+
   if (filteredCountries.length === 1) {
     const {
       name: { common: countryName },
@@ -18,13 +19,22 @@ const ListOfCountries = ({ applyFilter, filterName }) => {
       languages,
       flags: { svg: flag },
     } = filteredCountries[0];
-    console.log(countryName);
-    console.log(capital);
-    console.log(area);
-    console.log(JSON.stringify(languages));
-    console.log(flag);
+
+    lteTen_gTZero = (
+      <div>
+      <h2>{countryName}</h2>
+      <p>Capital: {capital}</p>
+      <p>Area: {area}</p>
+      <h3>Languages</h3>
+      <ul>
+      {Object.values(languages).map((lang,i)=>(
+        <li key={i}>{lang}</li>
+      ))}
+      </ul>
+      <img src={flag} alt={`This is the flag of ${countryName}`} />
+      </div>
+    )
   }
-  // const singleCountry = lteTen_gTZero.lenght === 1?
   return <div>{lteTen_gTZero}</div>;
 };
 
