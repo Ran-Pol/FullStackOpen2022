@@ -1,10 +1,15 @@
-const ListOfCountries = ({ names, setCountriesName }) => {
-  const countriesCommonName = names.map((country) => country.name.common);
+const ListOfCountries = ({ applyFilter, filterName }) => {
+  const listResults = applyFilter(filterName.trim()).map((name, i) => (
+    <p key={i}>{name}</p>
+  ));
+  const lteTen_gTZero =
+    listResults.length > 0 && listResults.length <= 10
+      ? listResults
+      : (listResults.length > 10 && filterName.trim().length)
+      ? "Too many matches, specify another filter"
+      : "No results..."
 
-//   setCountriesName(countriesCommonName);
-  console.log(countriesCommonName);
-
-  return <div>List Of Countries</div>;
+  return <div>{lteTen_gTZero}</div>;
 };
 
 export default ListOfCountries;

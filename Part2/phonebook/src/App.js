@@ -16,7 +16,7 @@ const App = () => {
     });
   };
 
-  useEffect(hook, []);
+ useEffect(hook, []);
 
   const addContactHandeler = (event) => {
     event.preventDefault();
