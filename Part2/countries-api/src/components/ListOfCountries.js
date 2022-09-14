@@ -1,8 +1,8 @@
-const ListOfCountries = ({ applyFilter, filterName, setFilterName }) => {
-  const showProfile = (country) => (
-    ()=>(setFilterName(country)))
-  ;
+import axios from "axios";
+// import CountryProfile from "./CountryProfile";
 
+const ListOfCountries = ({ applyFilter, filterName, setFilterName }) => {
+  const showProfile = (country) => () => setFilterName(country);
   const filteredCountries = applyFilter();
   const listResults = filteredCountries.map(({ name: { common } }, i) => (
     <div key={i}>
@@ -21,13 +21,53 @@ const ListOfCountries = ({ applyFilter, filterName, setFilterName }) => {
       : "No results...";
 
   if (filteredCountries.length === 1) {
-    const {
-      name: { common: countryName },
-      capital: [capital],
-      area,
-      languages,
-      flags: { svg: flag },
-    } = filteredCountries[0];
+
+    (async function(){
+      const {
+        name: { common: countryName },
+        capital: [capital],
+        area,
+        languages,
+        flags: { svg: flag },
+        capitalInfo: {
+          latlng: [lat, lon],
+        },
+      } = filteredCountries[0];
+
+      const respo = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.REACT_APP_WEATHER_API_KEY}&units=imperial`
+      );
+
+
+    })();
+
+      const {
+        weather: [{ icon }],
+        main: { temp },
+        wind: { speed },
+      } = respo.data;
+      // Temp: Fahrenheit
+      // Speed: m/s
+      // console.log("Inside the hook ",icon, temp, speed);
+      // theCapital["icon"] = icon;
+      // theCapital["temp"] = temp;
+      // theCapital["windSpeed"] = speed;
+      theCapital = {
+        temp,
+        speed,
+        icon
+      }
+
+      console.log("First Inside")
+
+    };
+
+    let weatherObj;
+    hook(weatherObj);
+console.log("Second outside")
+    const { temp, speed, icon } = weatherObj;
+    console.log("This is the result ",weatherObj.temp )
+    console.log(weatherObj)
 
     lteTen_gTZero = (
       <div>
@@ -41,6 +81,10 @@ const ListOfCountries = ({ applyFilter, filterName, setFilterName }) => {
           ))}
         </ul>
         <img src={flag} alt={`This is the flag of ${countryName}`} />
+        <h3>{`Weather in ${capital}`}</h3>
+        <p>Tempeture: {temp} Fahrenheit</p>
+        {/* <img src={`https://openweathermap.org/img/wn/${icon}@2x.png`} alt="Tempeture Illustration"/> */}
+        <p>wind: {speed} m/s</p>
       </div>
     );
   }

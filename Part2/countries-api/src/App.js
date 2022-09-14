@@ -8,6 +8,7 @@ function App() {
   const [countries_raw, setCountriesRaw] = useState([]);
   const [filterName, setFilterName] = useState("");
 
+  // console.log(process.env.REACT_APP_WEATHER_API_KEY)
   const hook = () => {
     axios.get("https://restcountries.com/v3.1/all").then((response) => {
       setCountriesRaw(response.data);
