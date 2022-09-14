@@ -28,7 +28,7 @@ function App() {
     <div>
       <Filter setFilterName={setFilterName} />
       <h2>Lis of countries</h2>
-      <ListOfCountries applyFilter={applyFilter} filterName={filterName} />
+      <ListOfCountries applyFilter={applyFilter} filterName={filterName} setFilterName={setFilterName}/>
     </div>
   );
 }
