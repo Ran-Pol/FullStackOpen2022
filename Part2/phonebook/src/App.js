@@ -41,6 +41,21 @@ const App = () => {
     setNewPhone("");
   };
 
+  const deleteContactOf = (id) => {
+    const { name } = persons.find((n) => n.id === id);
+
+    if (window.confirm(`Do you really want to delete ${name}`)) {
+      const newPhoneList = persons.filter((contact) => contact.id !== id);
+
+      phoneService.deleteRequest(id).then(() => {
+        setPersons(newPhoneList);
+      });
+      return
+    }
+
+    console.log(`Decided not to delete ${name}`);
+  };
+
   const applyFilter = (word) => {
     const newWord = word.trim().toLowerCase();
     const newFilterList = persons.filter(({ name }) =>
@@ -66,6 +81,7 @@ const App = () => {
         newFilter={newFilter}
         persons={persons}
         applyFilter={applyFilter}
+        deleteContact={deleteContactOf}
       />
     </div>
   );

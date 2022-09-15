@@ -1,7 +1,7 @@
-const PersonCard = ({ name, number }) => {
+const PersonCard = ({ name, number,deleteContact }) => {
   return (
     <p>
-      {name} {number}
+      {name} {number}{" "}<button onClick={deleteContact}>Delete</button>
     </p>
   );
 };
