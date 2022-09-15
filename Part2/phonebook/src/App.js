@@ -1,8 +1,9 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import Form from "./components/Form";
 import PersonList from "./components/PersonList";
+// Notes Services
+import phoneService from "./services/phonedata";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -10,13 +11,11 @@ const App = () => {
   const [newPhone, setNewPhone] = useState("");
   const [newFilter, setNewFilterWord] = useState("");
 
-  const hook = () => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
+  useEffect(() => {
+    phoneService.getAll().then((allContacts) => {
+      setPersons(allContacts);
     });
-  };
-
- useEffect(hook, []);
+  }, []);
 
   const addContactHandeler = (event) => {
     event.preventDefault();
@@ -28,13 +27,16 @@ const App = () => {
       alert(`${newName.trim()} is already added to phonebook`);
       return;
     }
-    const newContact = [
-      {
-        name: newName.trim(),
-        number: newPhone,
-      },
-    ];
-    setPersons(persons.concat(newContact));
+    const newContact = {
+      name: newName.trim(),
+      number: newPhone,
+    };
+
+    phoneService
+      .create(newContact)
+      .then((returnedNewContact) =>
+        setPersons(persons.concat(returnedNewContact))
+      );
     setNewName("");
     setNewPhone("");
   };
