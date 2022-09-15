@@ -11,6 +11,7 @@ const Form = ({
       <div>
         Name:
         <input
+        autoFocus
           onChange={(e) => setNewName(e.target.value)}
           value={newName}
           placeholder="Enter fullname"

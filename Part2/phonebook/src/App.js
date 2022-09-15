@@ -24,7 +24,27 @@ const App = () => {
       .includes(newName.trim());
 
     if (doesNameExist) {
-      alert(`${newName.trim()} is already added to phonebook`);
+      if (
+        window.confirm(
+          `${newName.trim()} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const oldContact = persons.find(
+          ({ name }) => name.trim() === newName.trim()
+        );
+
+        phoneService
+          .update(oldContact.id, { ...oldContact, number: newPhone })
+          .then((returnedContact) => {
+            setPersons(
+              persons.map((cont) =>
+                cont.id !== oldContact.id ? cont : returnedContact
+              )
+            );
+          });
+        setNewName("");
+        setNewPhone("");
+      }
       return;
     }
     const newContact = {
@@ -50,7 +70,7 @@ const App = () => {
       phoneService.deleteRequest(id).then(() => {
         setPersons(newPhoneList);
       });
-      return
+      return;
     }
 
     console.log(`Decided not to delete ${name}`);
