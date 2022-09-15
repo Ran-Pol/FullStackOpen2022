@@ -205,3 +205,49 @@
         "regex": "^(\\d{5})$"
     }
 }
+
+
+{
+    "coord": {
+        "lon": -69.9,
+        "lat": 18.47
+    },
+    "weather": [
+        {
+            "id": 804,
+            "main": "Clouds",
+            "description": "overcast clouds",
+            "icon": "04n"
+        }
+    ],
+    "base": "stations",
+    "main": {
+        "temp": 79.21,
+        "feels_like": 79.21,
+        "temp_min": 76.96,
+        "temp_max": 79.21,
+        "pressure": 1016,
+        "humidity": 85
+    },
+    "visibility": 10000,
+    "wind": {
+        "speed": 1.99,
+        "deg": 8,
+        "gust": 5.99
+    },
+    "clouds": {
+        "all": 97
+    },
+    "dt": 1663210133,
+    "sys": {
+        "type": 2,
+        "id": 2000734,
+        "country": "DO",
+        "sunrise": 1663151238,
+        "sunset": 1663195398
+    },
+    "timezone": -14400,
+    "id": 3491941,
+    "name": "Villa Francisca",
+    "cod": 200
+}

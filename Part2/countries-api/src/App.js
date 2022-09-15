@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-import Filter from "./components/Filter";
 import ListOfCountries from "./components/ListOfCountries";
 
 function App() {
-  const [countries_raw, setCountriesRaw] = useState([]);
-  const [filterName, setFilterName] = useState("");
+  const [countries_raw, setCountriesRaw] = useState({});
+  const [countryFilterList, setCountryFilterList] = useState([]);
 
   // console.log(process.env.REACT_APP_WEATHER_API_KEY)
   const hook = () => {
@@ -16,21 +15,22 @@ function App() {
   };
   useEffect(hook, []);
 
-  const applyFilter = () => {
-    const newWord = filterName.trim().toLowerCase();
-
-    const newFilterList = countries_raw.filter(({ name: { common } }) =>
-      common.trim().toLowerCase().includes(newWord)
+  const handleCountriesFilter = (e) => {
+    const filterWord = e.target.value.trim().toLowerCase();
+    const lookedUp = countries_raw.filter((country) =>
+      country.name.common.toLowerCase().includes(filterWord)
     );
-    return newFilterList;
+    setCountryFilterList(lookedUp);
   };
 
   return (
-    <div>
-      <Filter setFilterName={setFilterName} />
-      <h2>Lis of countries</h2>
-      <ListOfCountries applyFilter={applyFilter} filterName={filterName} setFilterName={setFilterName}/>
-    </div>
+    <>
+      <h1>Countries Look Up</h1>
+      <p>
+        Search for countries: <input onChange={handleCountriesFilter} />
+      </p>
+      <ListOfCountries countryFilterList={countryFilterList} />
+    </>
   );
 }
 
