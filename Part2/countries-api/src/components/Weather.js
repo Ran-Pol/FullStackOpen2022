@@ -17,7 +17,7 @@ const Weather = ({ country }) => {
   };
 
   useEffect(hook, [apiAddress]);
-  console.log(weather);
+
   return (
     <>
       {Object.keys(weather).length === 0 || weather.error ? (
