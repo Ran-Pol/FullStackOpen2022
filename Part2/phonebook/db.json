@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Ca",
-      "number": "234",
-      "id": 3
-    },
-    {
       "name": "Albert Puljos",
       "number": "700 700 700",
       "id": 4
@@ -14,6 +9,11 @@
       "name": "Sammy Sosa",
       "number": "500 500 500",
       "id": 5
+    },
+    {
+      "name": "E",
+      "number": "4",
+      "id": 10
     }
   ]
 }

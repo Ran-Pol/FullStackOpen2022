@@ -49,6 +49,15 @@ const App = () => {
                 cont.id !== oldContact.id ? cont : returnedContact
               )
             );
+          })
+          .catch((erro) => {
+            setNotiMessage(
+              `${oldContact.name} was previously deleted from the server!`
+            );
+            setTimeout(() => {
+              setNotiMessage(null);
+            }, 5000);
+            setPersons(persons.filter((cont) => cont.id !== oldContact.id));
           });
         setNewName("");
         setNewPhone("");
