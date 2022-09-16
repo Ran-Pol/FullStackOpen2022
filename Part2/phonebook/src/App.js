@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import Form from "./components/Form";
 import PersonList from "./components/PersonList";
+import Notification from "./components/Notification";
 // Notes Services
 import phoneService from "./services/phonedata";
 
@@ -10,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [newFilter, setNewFilterWord] = useState("");
+  const [notiMessage, setNotiMessage] = useState(null);
 
   useEffect(() => {
     phoneService.getAll().then((allContacts) => {
@@ -36,6 +38,12 @@ const App = () => {
         phoneService
           .update(oldContact.id, { ...oldContact, number: newPhone })
           .then((returnedContact) => {
+            setNotiMessage(
+              `${returnedContact.name} was updated with a new number ${returnedContact.number}.`
+            );
+            setTimeout(() => {
+              setNotiMessage(null);
+            }, 5000);
             setPersons(
               persons.map((cont) =>
                 cont.id !== oldContact.id ? cont : returnedContact
@@ -52,11 +60,16 @@ const App = () => {
       number: newPhone,
     };
 
-    phoneService
-      .create(newContact)
-      .then((returnedNewContact) =>
-        setPersons(persons.concat(returnedNewContact))
+    phoneService.create(newContact).then((returnedNewContact) => {
+      setNotiMessage(
+        `${returnedNewContact.name} was add to your contact list succefully!`
       );
+      setTimeout(() => {
+        setNotiMessage(null);
+      }, 5000);
+
+      setPersons(persons.concat(returnedNewContact));
+    });
     setNewName("");
     setNewPhone("");
   };
@@ -68,6 +81,10 @@ const App = () => {
       const newPhoneList = persons.filter((contact) => contact.id !== id);
 
       phoneService.deleteRequest(id).then(() => {
+        setNotiMessage(`${name} was deleted from your contact list!`);
+        setTimeout(() => {
+          setNotiMessage(null);
+        }, 5000);
         setPersons(newPhoneList);
       });
       return;
@@ -87,6 +104,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={notiMessage} />
       <Filter setNewFilterWord={setNewFilterWord} />
       <Form
         addContactHandeler={addContactHandeler}
