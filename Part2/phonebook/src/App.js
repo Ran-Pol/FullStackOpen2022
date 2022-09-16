@@ -25,6 +25,9 @@ const App = () => {
       .map(({ name }) => name.trim())
       .includes(newName.trim());
 
+    setNewName("");
+    setNewPhone("");
+
     if (doesNameExist) {
       if (
         window.confirm(
@@ -59,8 +62,7 @@ const App = () => {
             }, 5000);
             setPersons(persons.filter((cont) => cont.id !== oldContact.id));
           });
-        setNewName("");
-        setNewPhone("");
+      
       }
       return;
     }
@@ -79,8 +81,6 @@ const App = () => {
 
       setPersons(persons.concat(returnedNewContact));
     });
-    setNewName("");
-    setNewPhone("");
   };
 
   const deleteContactOf = (id) => {
