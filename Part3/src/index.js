@@ -26,6 +26,10 @@ let persons = [
   },
 ];
 
+function generateID() {
+  return Math.floor(Math.random() * 1000);
+}
+
 app.get("/", (req, res) => {
   res.send("Hello Persons");
 });
@@ -44,6 +48,29 @@ app.get("/api/persons/:id", (req, res) => {
   } else {
     res.status(404).send("Not found");
   }
+});
+
+app.post("/api/persons", (req, res) => {
+  const { name, number } = req.body;
+  const nameExist = persons.find((p) => p.name === name);
+  if (!name || !number) {
+    return res.status(400).json({
+      error: `${!name ? "Name" : "Number"} is missing`,
+    });
+  }
+  if (Boolean(nameExist)) {
+    return res.status(400).json({
+      error: `${nameExist.name} already exist.`,
+    });
+  }
+
+  persons = persons.concat({
+    id: generateID(),
+    name,
+    number,
+  });
+
+  res.send(persons);
 });
 
 app.delete("/api/persons/:id", (req, res) => {
