@@ -46,6 +46,12 @@ app.get("/api/persons/:id", (req, res) => {
   }
 });
 
+app.delete("/api/persons/:id", (req, res) => {
+  const { id } = req.params;
+  const foundContact = persons.filter((p) => p.id !== +id);
+  res.send(foundContact);
+});
+
 app.get("/info", (req, res) => {
   res.send(
     `<p>Phonebook has for ${persons.length} people</p> <p>${new Date()}</p>`
