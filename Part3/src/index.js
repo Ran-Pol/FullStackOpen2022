@@ -31,7 +31,19 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/persons", (req, res) => {
-  res.send(notes);
+  res.send(persons);
+});
+app.get("/api/persons/:id", (req, res) => {
+  const { id } = req.params;
+
+  const foundContact = persons.find((p) => p.id === +id);
+  console.log(foundContact);
+
+  if (foundContact) {
+    res.send(foundContact);
+  } else {
+    res.status(404).send("Not found");
+  }
 });
 
 app.get("/info", (req, res) => {
