@@ -4,14 +4,14 @@ const app = express();
 app.use(express.json());
 
 const requestLogger = (request, response, next) => {
-  console.log('Method:', request.method)
-  console.log('Path:  ', request.path)
-  console.log('Body:  ', request.body)
-  console.log('---')
-  next()
-}
+  console.log("Method:", request.method);
+  console.log("Path:  ", request.path);
+  console.log("Body:  ", request.body);
+  console.log("---");
+  next();
+};
 // Self Made Middleware
-app.use(requestLogger)
+app.use(requestLogger);
 
 let persons = [
   {
@@ -95,13 +95,11 @@ app.get("/info", (req, res) => {
   );
 });
 
-
 const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
-}
+  response.status(404).send({ error: "unknown endpoint" });
+};
 
-app.use(unknownEndpoint)
-
+app.use(unknownEndpoint);
 
 const PORT = 3000;
 app.listen(PORT, () => {
