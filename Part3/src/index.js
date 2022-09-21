@@ -3,6 +3,16 @@ const app = express();
 
 app.use(express.json());
 
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  console.log('Body:  ', request.body)
+  console.log('---')
+  next()
+}
+// Self Made Middleware
+app.use(requestLogger)
+
 let persons = [
   {
     id: 1,
@@ -84,6 +94,14 @@ app.get("/info", (req, res) => {
     `<p>Phonebook has for ${persons.length} people</p> <p>${new Date()}</p>`
   );
 });
+
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
 
 const PORT = 3000;
 app.listen(PORT, () => {
