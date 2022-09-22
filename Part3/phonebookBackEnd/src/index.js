@@ -32,45 +32,37 @@ app.get("/", (req, res) => {
   res.send("<h1>Hello Persons!</h1>");
 });
 
-// All contacts request
+// All contacts request to the Database
 app.get("/api/persons", (request, response) => {
   Person.find({}).then((persons) => {
     response.json(persons);
   });
 });
 
-// Individual contact request
+// Individual contact request to the Database
 app.get("/api/persons/:id", (request, response) => {
   Person.findById(request.params.id).then((person) => {
     response.json(person);
   });
 });
 
-app.post("/api/persons", (req, res) => {
-  const body = req.body;
-  const nameExist = persons.find((p) => p.name === name);
-  // If a property name or number is empty send error
-  if (!name || !number) {
-    return res.status(400).json({
-      error: `${!name ? "Name" : "Number"} is missing`,
-    });
+// Adding a new contact to the Database
+app.post("/api/persons", (request, response) => {
+  const { name, number } = request.body;
+
+  if (name === undefined || number === undefined) {
+    return response.status(400).json({ error: "content missing" });
   }
 
-  // If the name exist send an error
-  if (Boolean(nameExist)) {
-    return res.status(400).json({
-      error: `${nameExist.name} already exist.`,
-    });
-  }
-  const newContact = {
-    id: generateID(),
+  const person = new Person({
     name,
     number,
-  };
-  // If the new contact doesn't exit or all properties are filled, then we create a new contact.
-  persons = persons.concat(newContact);
+    date: new Date(),
+  });
 
-  res.send(newContact);
+  person.save().then((savedContact) => {
+    response.json(savedContact);
+  });
 });
 
 app.delete("/api/persons/:id", (req, res) => {
@@ -79,10 +71,13 @@ app.delete("/api/persons/:id", (req, res) => {
   res.send(foundContact);
 });
 
-app.get("/info", (req, res) => {
-  res.send(
-    `<p>Phonebook has for ${persons.length} people</p> <p>${new Date()}</p>`
-  );
+// Show how many total contacts are saved in the phonebook
+app.get("/info", (request, response) => {
+  Person.find({}).then((persons) => {
+    response.send(
+      `<h1>There are ${persons.length} contacts in your phonebook.</h1>`
+    );
+  });
 });
 
 const unknownEndpoint = (request, response) => {
