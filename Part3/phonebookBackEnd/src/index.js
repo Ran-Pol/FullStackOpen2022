@@ -1,7 +1,9 @@
 const express = require("express");
+const app = express();
 const morgan = require("morgan");
-const uuid = require("uuid");
 const cors = require("cors");
+require("dotenv").config();
+const Person = require("../models/person");
 
 morgan.token("bodyData", function getId(req) {
   return req.bodyData;
@@ -12,9 +14,6 @@ function assignJsonBody(req, res, next) {
   next();
 }
 
-const app = express();
-
-app.use(cors());
 app.use(express.json());
 
 app.use(assignJsonBody);
@@ -25,57 +24,30 @@ app.use(
   )
 );
 
+app.use(cors());
+
 app.use(express.static("build"));
 
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
-
-function generateID() {
-  return Math.floor(Math.random() * 1000);
-}
-
 app.get("/", (req, res) => {
-  res.send("Hello Persons");
+  res.send("<h1>Hello Persons!</h1>");
 });
 
-app.get("/api/persons", (req, res) => {
-  res.send(persons);
+// All contacts request
+app.get("/api/persons", (request, response) => {
+  Person.find({}).then((persons) => {
+    response.json(persons);
+  });
 });
-app.get("/api/persons/:id", (req, res) => {
-  const { id } = req.params;
 
-  const foundContact = persons.find((p) => p.id === +id);
-  console.log(foundContact);
-
-  if (foundContact) {
-    res.send(foundContact);
-  } else {
-    res.status(404).send("Not found");
-  }
+// Individual contact request
+app.get("/api/persons/:id", (request, response) => {
+  Person.findById(request.params.id).then((person) => {
+    response.json(person);
+  });
 });
 
 app.post("/api/persons", (req, res) => {
-  const { name, number } = req.body;
+  const body = req.body;
   const nameExist = persons.find((p) => p.name === name);
   // If a property name or number is empty send error
   if (!name || !number) {
