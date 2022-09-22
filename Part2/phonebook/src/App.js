@@ -62,7 +62,6 @@ const App = () => {
             }, 5000);
             setPersons(persons.filter((cont) => cont.id !== oldContact.id));
           });
-      
       }
       return;
     }
