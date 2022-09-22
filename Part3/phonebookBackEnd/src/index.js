@@ -65,10 +65,13 @@ app.post("/api/persons", (request, response) => {
   });
 });
 
-app.delete("/api/persons/:id", (req, res) => {
-  const { id } = req.params;
-  const foundContact = persons.filter((p) => p.id !== +id);
-  res.send(foundContact);
+// Deleting a contact from the database
+app.delete("/api/persons/:id", (req, res, next) => {
+  Person.findByIdAndRemove(req.params.id)
+    .then((result) => {
+      res.status(204).end();
+    })
+    .catch((error) => next(error));
 });
 
 // Show how many total contacts are saved in the phonebook
