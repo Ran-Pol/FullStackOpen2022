@@ -83,11 +83,29 @@ app.get("/info", (request, response) => {
   });
 });
 
+// Last route before the middleware error handler
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
 };
-
 app.use(unknownEndpoint);
+
+
+// Error handler funtion
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
+// This has to be the last loaded middleware.
+app.use(errorHandler);
+
+
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
