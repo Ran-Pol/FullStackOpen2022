@@ -1,6 +1,6 @@
-const express = require("express");
-const mongoose = require("mongoose");
 require("dotenv").config();
+const express = require("express");
+const Note = require("./models/note");
 
 const cors = require("cors");
 
@@ -10,26 +10,6 @@ app.use(cors());
 app.use(express.json());
 
 app.use(express.static("build"));
-
-const url = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASSWORD}@cluster0.p4jcd5f.mongodb.net/noteApp?retryWrites=true&w=majority`;
-
-mongoose.connect(url);
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  date: Date,
-  important: Boolean,
-});
-
-noteSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
-
-const Note = mongoose.model("Note", noteSchema);
 
 const generateId = () => {
   const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
@@ -83,7 +63,7 @@ app.delete("/api/notes/:id", (request, response) => {
   response.status(204).end();
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
