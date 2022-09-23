@@ -25,6 +25,9 @@ const App = () => {
       .map(({ name }) => name.trim())
       .includes(newName.trim());
 
+    setNewName("");
+    setNewPhone("");
+
     const newContact = {
       name: newName.trim(),
       number: newPhone,
@@ -78,9 +81,6 @@ const App = () => {
 
       setPersons(persons.concat(returnedNewContact));
     });
-
-    setNewName("");
-    setNewPhone("");
   };
 
   const deleteContactOf = (id) => {
