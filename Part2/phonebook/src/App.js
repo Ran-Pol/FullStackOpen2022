@@ -25,8 +25,10 @@ const App = () => {
       .map(({ name }) => name.trim())
       .includes(newName.trim());
 
-    setNewName("");
-    setNewPhone("");
+    const newContact = {
+      name: newName.trim(),
+      number: newPhone,
+    };
 
     if (doesNameExist) {
       if (
@@ -65,10 +67,6 @@ const App = () => {
       }
       return;
     }
-    const newContact = {
-      name: newName.trim(),
-      number: newPhone,
-    };
 
     phoneService.create(newContact).then((returnedNewContact) => {
       setNotiMessage(
@@ -80,6 +78,9 @@ const App = () => {
 
       setPersons(persons.concat(returnedNewContact));
     });
+
+    setNewName("");
+    setNewPhone("");
   };
 
   const deleteContactOf = (id) => {

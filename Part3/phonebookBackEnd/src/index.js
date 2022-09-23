@@ -47,22 +47,39 @@ app.get("/api/persons/:id", (request, response) => {
 });
 
 // Adding a new contact to the Database
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const { name, number } = request.body;
 
-  if (name === undefined || number === undefined) {
+  if (name.length === 0 || number.length === 0) {
     return response.status(400).json({ error: "content missing" });
   }
-
   const person = new Person({
     name,
     number,
     date: new Date(),
   });
 
-  person.save().then((savedContact) => {
-    response.json(savedContact);
-  });
+  person
+    .save()
+    .then((savedContact) => {
+      response.json(savedContact);
+    })
+    .catch((error) => next(error));
+});
+
+// Updating a previous contact
+app.put("/api/persons/:id", (request, response, next) => {
+  const { number } = request.body;
+
+  const updateContact = {
+    number,
+  };
+
+  Person.findByIdAndUpdate(request.params.id, updateContact, { new: true })
+    .then((updatedContact) => {
+      response.json(updatedContact);
+    })
+    .catch((error) => next(error));
 });
 
 // Deleting a contact from the database
@@ -89,7 +106,6 @@ const unknownEndpoint = (request, response) => {
 };
 app.use(unknownEndpoint);
 
-
 // Error handler funtion
 const errorHandler = (error, request, response, next) => {
   console.error(error.message);
@@ -103,9 +119,6 @@ const errorHandler = (error, request, response, next) => {
 
 // This has to be the last loaded middleware.
 app.use(errorHandler);
-
-
-
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
