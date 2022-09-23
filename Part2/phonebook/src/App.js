@@ -58,29 +58,36 @@ const App = () => {
               )
             );
           })
-          .catch((erro) => {
-            setNotiMessage(
-              `${oldContact.name} was previously deleted from the server!`
-            );
+          .catch((error) => {
+            setNotiMessage(`Error: ${error.response.data.error}`);
             setTimeout(() => {
               setNotiMessage(null);
             }, 5000);
-            setPersons(persons.filter((cont) => cont.id !== oldContact.id));
           });
       }
       return;
     }
 
-    phoneService.create(newContact).then((returnedNewContact) => {
-      setNotiMessage(
-        `${returnedNewContact.name} was add to your contact list succefully!`
-      );
-      setTimeout(() => {
-        setNotiMessage(null);
-      }, 5000);
+    phoneService
+      .create(newContact)
+      .then((returnedNewContact) => {
+        setNotiMessage(
+          `${returnedNewContact.name} was add to your contact list succefully!`
+        );
+        setTimeout(() => {
+          setNotiMessage(null);
+        }, 5000);
 
-      setPersons(persons.concat(returnedNewContact));
-    });
+        setPersons(persons.concat(returnedNewContact));
+      })
+      .catch((error) => {
+        // this is the way to access the error message
+        // console.log(error.response.data.error)
+        setNotiMessage(`Error: ${error.response.data.error}`);
+        setTimeout(() => {
+          setNotiMessage(null);
+        }, 5000);
+      });
   };
 
   const deleteContactOf = (id) => {

@@ -1,7 +1,7 @@
 const Notification = ({ message }) => {
   if (message === null) {
     return null;
-  }else if(message.includes("previously")){
+  }else if(message.includes("Error")){
     return <div className="error">{message}</div>;
   }
 
