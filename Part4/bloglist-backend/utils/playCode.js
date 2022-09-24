@@ -49,10 +49,22 @@ const blogs = [
   },
 ]
 
-const favoriteBlog = (blogs) => {
-  return blogs.reduce(
-    (previousValue, currentValue) =>
-      previousValue.likes <= currentValue.likes ? currentValue: previousValue)
+const mostBlogs = (listBlogs) => {
+  const authorMostBlogs = listBlogs.reduce((authors, nextBlog) => {
+    authors[nextBlog['author']] = authors[nextBlog['author']] || 0
+    authors[nextBlog['author']] += 1
+    return authors
+  }, {})
+  const [author, blogs] = Object.entries(authorMostBlogs).reduce(
+    (startValue, currentValue) =>
+      startValue[1] >= currentValue[1] ? startValue : currentValue
+  )
+  return {
+    author,
+    blogs,
+  }
 }
 
-console.log(favoriteBlog(blogs))
+const output = mostBlogs(blogs)
+// console.log(output)
+console.log(JSON.stringify(output, null, 2))
