@@ -7,8 +7,6 @@ const middleware = require("./utils/middleware");
 const { info, error } = require("./utils/logger");
 const mongoose = require("mongoose");
 
-info("connecting to", config.MONGODB_URI);
-
 mongoose
   .connect(config.MONGODB_URI)
   .then(() => {
