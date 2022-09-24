@@ -49,22 +49,22 @@ const blogs = [
   },
 ]
 
-const mostBlogs = (listBlogs) => {
-  const authorMostBlogs = listBlogs.reduce((authors, nextBlog) => {
+const mostLikes = (listBlogs) => {
+  const authorMostLikes = listBlogs.reduce((authors, nextBlog) => {
     authors[nextBlog['author']] = authors[nextBlog['author']] || 0
-    authors[nextBlog['author']] += 1
+    authors[nextBlog['author']] += nextBlog['likes']
     return authors
   }, {})
-  const [author, blogs] = Object.entries(authorMostBlogs).reduce(
+  const [author, likes] = Object.entries(authorMostLikes).reduce(
     (startValue, currentValue) =>
       startValue[1] >= currentValue[1] ? startValue : currentValue
   )
   return {
     author,
-    blogs,
+    likes,
   }
 }
 
-const output = mostBlogs(blogs)
+const output = mostLikes(blogs)
 // console.log(output)
 console.log(JSON.stringify(output, null, 2))
