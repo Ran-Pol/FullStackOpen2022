@@ -19,50 +19,46 @@ const App = () => {
     });
   }, []);
 
+  const notify = (message) => {
+    setNotiMessage(message);
+    setTimeout(() => {
+      setNotiMessage(null);
+    }, 5000);
+  };
+
   const addContactHandeler = (event) => {
     event.preventDefault();
-    const doesNameExist = persons
-      .map(({ name }) => name.trim())
-      .includes(newName.trim());
-
-    setNewName("");
-    setNewPhone("");
-
     const newContact = {
       name: newName.trim(),
       number: newPhone,
     };
 
-    if (doesNameExist) {
+    setNewName("");
+    setNewPhone("");
+
+    const existingContact = persons.find(
+      (p) => p.name.trim() === newContact.name
+    );
+    if (existingContact) {
       if (
         window.confirm(
           `${newName.trim()} is already added to phonebook, replace the old number with a new one?`
         )
       ) {
-        const oldContact = persons.find(
-          ({ name }) => name.trim() === newName.trim()
-        );
-
         phoneService
-          .update(oldContact.id, { ...oldContact, number: newPhone })
+          .update(existingContact.id, { ...existingContact, number: newPhone })
           .then((returnedContact) => {
-            setNotiMessage(
-              `${returnedContact.name} was updated with a new number ${returnedContact.number}.`
-            );
-            setTimeout(() => {
-              setNotiMessage(null);
-            }, 5000);
             setPersons(
               persons.map((cont) =>
-                cont.id !== oldContact.id ? cont : returnedContact
+                cont.id !== existingContact.id ? cont : returnedContact
               )
+            );
+            notify(
+              `${returnedContact.name} was updated with a new number ${returnedContact.number}.`
             );
           })
           .catch((error) => {
-            setNotiMessage(`Error: ${error.response.data.error}`);
-            setTimeout(() => {
-              setNotiMessage(null);
-            }, 5000);
+            notify(`Error: ${error.response.data.error}`);
           });
       }
       return;
@@ -71,22 +67,13 @@ const App = () => {
     phoneService
       .create(newContact)
       .then((returnedNewContact) => {
-        setNotiMessage(
-          `${returnedNewContact.name} was add to your contact list succefully!`
-        );
-        setTimeout(() => {
-          setNotiMessage(null);
-        }, 5000);
-
         setPersons(persons.concat(returnedNewContact));
+        notify(
+          `${returnedNewContact.name} was added to your contact list succefully!`
+        );
       })
       .catch((error) => {
-        // this is the way to access the error message
-        // console.log(error.response.data.error)
-        setNotiMessage(`Error: ${error.response.data.error}`);
-        setTimeout(() => {
-          setNotiMessage(null);
-        }, 5000);
+        notify(`Error: ${error.response.data.error}`);
       });
   };
 
@@ -94,19 +81,12 @@ const App = () => {
     const { name } = persons.find((n) => n.id === id);
 
     if (window.confirm(`Do you really want to delete ${name}`)) {
-      const newPhoneList = persons.filter((contact) => contact.id !== id);
-
       phoneService.deleteRequest(id).then(() => {
-        setNotiMessage(`${name} was deleted from your contact list!`);
-        setTimeout(() => {
-          setNotiMessage(null);
-        }, 5000);
-        setPersons(newPhoneList);
+        setPersons(persons.filter((contact) => contact.id !== id));
+        notify(`${name} was deleted from your contact list!`);
       });
       return;
     }
-
-    console.log(`Decided not to delete ${name}`);
   };
 
   const applyFilter = (word) => {

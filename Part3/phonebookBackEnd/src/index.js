@@ -66,7 +66,7 @@ app.post('/api/persons', (req, res, next) => {
 
 // Updating a previous contact
 app.put('/api/persons/:id', (req, res, next) => {
-  const { name, number } = res.body
+  const { name, number } = req.body
 
   Person.findByIdAndUpdate(
     req.params.id,
