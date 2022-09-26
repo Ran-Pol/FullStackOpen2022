@@ -30,6 +30,12 @@ test('all blogs are returned', async () => {
 
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
+// Test 3: HTTP Method: GET
+test('test all blogs unique identifier property is named id', async () => {
+  const response = await api.get('/api/blogs')
+  const allHaveID = response.body.every((blog) => 'id' in blog)
+  expect(allHaveID).toBe(true)
+})
 
 afterAll(() => {
   mongoose.connection.close()
