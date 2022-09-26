@@ -57,6 +57,25 @@ test('a valid blog can be added ', async () => {
   const contents = blogsAtEnd.map((n) => n.title)
   expect(contents).toContain('Testing Post')
 })
+// Test 5: HTTP Method: POST
+test('title and url properties are missing from the request dat', async () => {
+  const newBlog = {
+    author: 'Test Author',
+    url: 'test.com',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.notesInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+
+  const contents = blogsAtEnd.map((n) => n.title)
+  expect(contents).not.toContain('Test Author')
+})
 
 afterAll(() => {
   mongoose.connection.close()
