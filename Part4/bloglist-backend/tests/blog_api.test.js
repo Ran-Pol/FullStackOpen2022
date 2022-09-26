@@ -8,12 +8,7 @@ const Blog = require('../models/blog')
 
 beforeEach(async () => {
   await Blog.deleteMany({})
-
-  const blogObjects = helper.initialBlogs.map((blog) => new Blog(blog))
-
-  const promiseArray = blogObjects.map((note) => note.save())
-
-  await Promise.all(promiseArray)
+  await Blog.insertMany(helper.initialBlogs)
 })
 
 // Test 1: HTTP Method: GET
@@ -51,7 +46,7 @@ test('a valid blog can be added ', async () => {
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
-  const blogsAtEnd = await helper.notesInDb()
+  const blogsAtEnd = await helper.blogsInDb()
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
   const contents = blogsAtEnd.map((n) => n.title)
@@ -70,11 +65,29 @@ test('title and url properties are missing from the request dat', async () => {
     .expect(400)
     .expect('Content-Type', /application\/json/)
 
-  const blogsAtEnd = await helper.notesInDb()
+  const blogsAtEnd = await helper.blogsInDb()
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
 
   const contents = blogsAtEnd.map((n) => n.title)
   expect(contents).not.toContain('Test Author')
+})
+
+// Test 6: Deletion of a note
+describe('deletion of a blog', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+
+    const blogssAtEnd = await helper.blogsInDb()
+
+    expect(blogssAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+
+    const contents = blogssAtEnd.map((r) => r.title)
+
+    expect(contents).not.toContain(blogToDelete.title)
+  })
 })
 
 afterAll(() => {
