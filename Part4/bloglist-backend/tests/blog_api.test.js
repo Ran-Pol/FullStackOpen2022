@@ -72,7 +72,7 @@ test('title and url properties are missing from the request dat', async () => {
   expect(contents).not.toContain('Test Author')
 })
 
-// Test 6: Deletion of a note
+// Test 6: Deletion of a blog
 describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
@@ -87,6 +87,27 @@ describe('deletion of a blog', () => {
     const contents = blogssAtEnd.map((r) => r.title)
 
     expect(contents).not.toContain(blogToDelete.title)
+  })
+})
+
+// Test 7: Updating of a blog post
+describe('updating of a blog post', () => {
+  test('succeeds with status code 204 if succed', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send({ likes: 16725422 })
+      .expect(204)
+
+    const blogssAtEnd = await helper.blogsInDb()
+
+    expect(blogssAtEnd).toHaveLength(helper.initialBlogs.length)
+
+    const contents = blogssAtEnd.map((r) => r.likes)
+
+    expect(contents).toContain(16725422)
   })
 })
 
