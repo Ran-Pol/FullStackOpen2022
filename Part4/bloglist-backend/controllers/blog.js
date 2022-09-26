@@ -12,6 +12,7 @@ blogsRouter.post('/', async (req, res) => {
     title: body.title,
     author: body.author,
     url: body.url,
+    // This is a test to check if the like property exist if not we add it with the value 0.
     likes: body.likes || 0,
   })
 
