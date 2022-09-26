@@ -4,17 +4,18 @@ const app = express()
 const cors = require('cors')
 const blogsRouter = require('./controllers/blog')
 const middleware = require('./utils/middleware')
-// eslint-disable-next-line no-unused-vars
-const { info, error } = require('./utils/logger')
+const logger = require('./utils/logger')
 const mongoose = require('mongoose')
+
+logger.info('connecting to', config.MONGODB_URI)
 
 mongoose
   .connect(config.MONGODB_URI)
   .then(() => {
-    info('connected to MongoDB')
+    logger.info('connected to MongoDB')
   })
   .catch((error) => {
-    error('error connecting to MongoDB:', error.message)
+    logger.error('error connecting to MongoDB:', error.message)
   })
 
 app.use(cors())
