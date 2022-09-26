@@ -8,10 +8,12 @@ const Note = require('../models/note')
 
 beforeEach(async () => {
   await Note.deleteMany({})
-  let noteObject = new Note(helper.initialNotes[0])
-  await noteObject.save()
-  noteObject = new Note(helper.initialNotes[1])
-  await noteObject.save()
+
+  const noteObjects = helper.initialNotes.map((note) => new Note(note))
+
+  const promiseArray = noteObjects.map((note) => note.save())
+
+  await Promise.all(promiseArray)
 })
 
 // Test 1: HTTP Method: GET
@@ -93,21 +95,16 @@ test('a note can be deleted', async () => {
   const notesAtStart = await helper.notesInDb()
   const noteToDelete = notesAtStart[0]
 
-  await api
-    .delete(`/api/notes/${noteToDelete.id}`)
-    .expect(204)
+  await api.delete(`/api/notes/${noteToDelete.id}`).expect(204)
 
   const notesAtEnd = await helper.notesInDb()
 
-  expect(notesAtEnd).toHaveLength(
-    helper.initialNotes.length - 1
-  )
+  expect(notesAtEnd).toHaveLength(helper.initialNotes.length - 1)
 
-  const contents = notesAtEnd.map(r => r.content)
+  const contents = notesAtEnd.map((r) => r.content)
 
   expect(contents).not.toContain(noteToDelete.content)
 })
-
 
 afterAll(() => {
   mongoose.connection.close()
