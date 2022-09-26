@@ -37,6 +37,27 @@ test('test all blogs unique identifier property is named id', async () => {
   expect(allHaveID).toBe(true)
 })
 
+// Test 4: HTTP Method: POST
+test('a valid blog can be added ', async () => {
+  const newBlog = {
+    title: 'Testing Post',
+    author: 'Test Author',
+    url: 'test.com',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.notesInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+
+  const contents = blogsAtEnd.map((n) => n.title)
+  expect(contents).toContain('Testing Post')
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
