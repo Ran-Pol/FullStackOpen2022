@@ -1,5 +1,6 @@
 const logger = require('./logger')
 
+// Self-made version of Morgan Package
 const requestLogger = (req, res, next) => {
   logger.info('Method:', req.method)
   logger.info('Path:  ', req.path)
@@ -8,10 +9,12 @@ const requestLogger = (req, res, next) => {
   next()
 }
 
+// Unknown Routes
 const unknownEndpoint = (req, res) => {
   res.status(404).send({ error: 'unknown endpoint' })
 }
 
+// Error Handler
 const errorHandler = (error, req, res, next) => {
   logger.error(error.message)
 

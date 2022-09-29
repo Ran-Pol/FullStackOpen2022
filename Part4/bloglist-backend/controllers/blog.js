@@ -1,11 +1,13 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 
+// Route to receive all blogs
 blogsRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({})
   res.json(blogs)
 })
 
+// Route to create a new blog
 blogsRouter.post('/', async (req, res) => {
   const body = req.body
   if (!body.title || !body.url) {
@@ -24,6 +26,7 @@ blogsRouter.post('/', async (req, res) => {
   res.status(201).json(savedBlog)
 })
 
+// Route to delete a blog
 blogsRouter.delete('/:id', async (req, res) => {
   const blogID = req.params.id
   await Blog.findByIdAndRemove(blogID)
@@ -31,6 +34,7 @@ blogsRouter.delete('/:id', async (req, res) => {
 })
 module.exports = blogsRouter
 
+// Route to update a blog
 blogsRouter.put('/:id', async (req, res) => {
   const blogID = req.params.id
   const { likes } = req.body

@@ -1,30 +1,31 @@
-const config = require('./utils/config')
 const express = require('express')
 require('express-async-errors')
+const pkg = require('./package.json')
 const app = express()
 const cors = require('cors')
+// Routes controllers
 const blogsRouter = require('./controllers/blog')
+// Middleswares
 const middleware = require('./utils/middleware')
-const logger = require('./utils/logger')
-const mongoose = require('mongoose')
 
-logger.info('connecting to', config.MONGODB_URI)
-
-mongoose
-  .connect(config.MONGODB_URI)
-  .then(() => {
-    logger.info('connected to MongoDB')
-  })
-  .catch((error) => {
-    logger.error('error connecting to MongoDB:', error.message)
-  })
-
+// App Configuration
+app.set('pkg', pkg)
 app.use(cors())
 app.use(express.json())
 app.use(middleware.requestLogger)
 
+// Routes
+app.get('/', (req, res) => {
+  res.json({
+    name: app.get('pkg').name,
+    author: app.get('pkg').author,
+    description: app.get('pkg').description,
+    version: app.get('pkg').version,
+  })
+})
 app.use('/api/blogs', blogsRouter)
 
+// Middlewares
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 

@@ -3,18 +3,21 @@ const dummy = (blogs) => {
   return 1
 }
 
+// Function to find the all post likes
 const totalLikes = (blogs) => {
   return blogs.reduce((sum, post) => {
     return sum + post.likes
   }, 0)
 }
 
+// Function to find the most favorite post
 const favoriteBlog = (blogs) => {
   return blogs.reduce((previousValue, currentValue) =>
     previousValue.likes <= currentValue.likes ? currentValue : previousValue
   )
 }
 
+// Author with most blogs
 const mostBlogs = (listBlogs) => {
   const authorMostBlogs = listBlogs.reduce((authors, nextBlog) => {
     authors[nextBlog['author']] = authors[nextBlog['author']] || 0
@@ -31,6 +34,7 @@ const mostBlogs = (listBlogs) => {
   }
 }
 
+// Author with most likes
 const mostLikes = (listBlogs) => {
   const authorMostLikes = listBlogs.reduce((authors, nextBlog) => {
     authors[nextBlog['author']] = authors[nextBlog['author']] || 0
