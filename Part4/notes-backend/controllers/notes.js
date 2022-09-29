@@ -3,11 +3,14 @@ const jwt = require('jsonwebtoken')
 const Note = require('../models/note')
 const User = require('../models/user')
 
+
+// Get all notes routes
 notesRouter.get('/', async (request, response) => {
   const notes = await Note.find({}).populate('user', { username: 1, name: 1 })
   response.json(notes)
 })
 
+// Get a single note by its id
 notesRouter.get('/:id', async (request, response, next) => {
   const notes = await Note.findById(request.params.id)
   if (notes) {
@@ -17,6 +20,7 @@ notesRouter.get('/:id', async (request, response, next) => {
   }
 })
 
+// We creating a getToken function that will be used as a middleware
 const getTokenFrom = (request) => {
   const authorization = request.get('authorization')
 
@@ -26,7 +30,8 @@ const getTokenFrom = (request) => {
   return null
 }
 
-notesRouter.post('/', async (request, response, next) => {
+// Post a note, this route is protected
+notesRouter.post('/', async (request, response) => {
   const body = request.body
   const token = getTokenFrom(request)
   const decodedToken = jwt.verify(token, process.env.SECRET)
@@ -49,11 +54,13 @@ notesRouter.post('/', async (request, response, next) => {
   response.status(201).json(savedNote)
 })
 
+// Delete a note, this route is protected
 notesRouter.delete('/:id', async (request, response, next) => {
   await Note.findByIdAndRemove(request.params.id)
   response.status(204).end()
 })
 
+// Update a note, this route is protected
 notesRouter.put('/:id', async (request, response, next) => {
   const body = request.body
 
