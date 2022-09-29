@@ -5,6 +5,7 @@ const app = express()
 const cors = require('cors')
 // Routes controllers
 const blogsRouter = require('./controllers/blog')
+const usersRouter = require('./controllers/user')
 // Middleswares
 const middleware = require('./utils/middleware')
 
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
   })
 })
 app.use('/api/blogs', blogsRouter)
+app.use('/api/users', usersRouter)
 
 // Middlewares
 app.use(middleware.unknownEndpoint)
