@@ -1,28 +1,37 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 // Route to receive all blogs
 blogsRouter.get('/', async (req, res) => {
-  const blogs = await Blog.find({})
+  const blogs = await Blog.find({}).populate('user', {
+    username: 1,
+    name: 1,
+  })
   res.json(blogs)
 })
 
 // Route to create a new blog
 blogsRouter.post('/', async (req, res) => {
   const body = req.body
+  const user = await User.findById(body.userID)
   if (!body.title || !body.url) {
     res.status(400).json({ erro: 'Missing properties' })
     return
   }
+
   const blog = new Blog({
     title: body.title,
     author: body.author,
     url: body.url,
-    // This is a test to check if the like property exist if not we add it with the value 0.
     likes: body.likes || 0,
+    user: user._id,
   })
 
   const savedBlog = await blog.save()
+  user.blogs = user.blogs.concat(savedBlog._id)
+  await user.save()
+
   res.status(201).json(savedBlog)
 })
 
