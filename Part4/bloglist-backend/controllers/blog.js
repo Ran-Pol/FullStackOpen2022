@@ -45,8 +45,24 @@ blogsRouter.post('/', async (req, res) => {
 // Route to delete a blog
 blogsRouter.delete('/:id', async (req, res) => {
   const blogID = req.params.id
-  await Blog.findByIdAndRemove(blogID)
-  res.status(204).end()
+  const blogFound = await Blog.findById(blogID)
+
+  if (!blogFound) {
+    res.status(404).json({ erro: `The blog post id#${blogID} don't exits` })
+  }
+  const decodedToken = jwt.verify(req.token, process.env.SECRET)
+
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'token missing or invalid' })
+  }
+
+  if (blogFound.user.toString() === decodedToken.id) {
+    await Blog.findByIdAndRemove(blogID)
+    res.status(204).end()
+  }
+  return res
+    .status(400)
+    .json({ error: 'You are not authorized to delete this blog' })
 })
 module.exports = blogsRouter
 
