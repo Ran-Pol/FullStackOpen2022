@@ -16,6 +16,7 @@ app.set('pkg', pkg)
 app.use(cors())
 app.use(express.json())
 app.use(middleware.requestLogger)
+app.use(middleware.tokenExtractor)
 
 // Routes
 app.get('/', (req, res) => {
