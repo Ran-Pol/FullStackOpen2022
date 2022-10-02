@@ -6,6 +6,7 @@ const cors = require('cors')
 // Routes controllers
 const blogsRouter = require('./controllers/blog')
 const usersRouter = require('./controllers/user')
+const loginRouter = require('./controllers/login')
 // Middleswares
 const middleware = require('./utils/middleware')
 require('./database')
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 })
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
 // Middlewares
 app.use(middleware.unknownEndpoint)
