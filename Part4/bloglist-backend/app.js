@@ -8,6 +8,7 @@ const blogsRouter = require('./controllers/blog')
 const usersRouter = require('./controllers/user')
 // Middleswares
 const middleware = require('./utils/middleware')
+require('./database')
 
 // App Configuration
 app.set('pkg', pkg)
