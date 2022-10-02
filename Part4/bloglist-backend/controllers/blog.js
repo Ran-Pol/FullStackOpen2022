@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
@@ -11,10 +12,25 @@ blogsRouter.get('/', async (req, res) => {
   res.json(blogs)
 })
 
+const getTokenFrom = (request) => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.substring(7)
+  }
+  return null
+}
+
 // Route to create a new blog
 blogsRouter.post('/', async (req, res) => {
   const body = req.body
-  const user = await User.findById(body.userID)
+  const token = getTokenFrom(req)
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'token missing or invalid' })
+  }
+  const user = await User.findById(decodedToken.id)
+
   if (!body.title || !body.url) {
     res.status(400).json({ erro: 'Missing properties' })
     return
