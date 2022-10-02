@@ -1,22 +1,26 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 
-const userSchema = new mongoose.Schema(
-  {
-    username: {
-      type: String,
-      unique: true,
-      minLength: 3,
-      required: true,
+const userSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    unique: true,
+    minLength: 3,
+    required: true,
+  },
+  name: String,
+  password: {
+    type: String,
+    minLength: 3,
+    required: true,
+  },
+  notes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Blog',
     },
-    name: String,
-    password: {
-      type: String,
-      minLength: 3,
-      required: true,
-    },
-  }
-)
+  ],
+})
 
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
