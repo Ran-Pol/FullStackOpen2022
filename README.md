@@ -5,8 +5,8 @@
 - [x] Part 1: Introduction to React 
 - [x] Part 2: Communicating with server
 - [x] Part 3: Programming a server with NodeJS and Express
+- [x] Part 4: Testing Express servers, user administration
 ###### Pending:
-- [ ] Part 4: Testing Express servers, user administration
 - [ ] Part 5: Testing React apps
 - [ ] Part 6: State management with Redux
 - [ ] Part 7: React router, custom hooks, styling app with CSS and webpack
