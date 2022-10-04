@@ -7,9 +7,60 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
+const initialBlogs = [
+  {
+    title: 'First Blog',
+    author: 'Ran Pol',
+    url: 'ranpol.com',
+    likes: 300,
+  },
+  {
+    title: 'Second Blog',
+    author: 'Ran Pol',
+    url: 'ranpol.com',
+    likes: 200,
+  },
+  {
+    title: 'Third Blog',
+    author: 'Ran Pol',
+    url: 'ranpol.com',
+    likes: 500,
+  },
+]
+
+const auth = {}
+
 beforeEach(async () => {
+  await User.deleteMany({})
   await Blog.deleteMany({})
-  await Blog.insertMany(helper.initialBlogs)
+
+  const response = await api.post('/api/users').send({
+    username: 'Test',
+    password: '123456',
+  })
+  // take the result of the POST /users/auth which is a token body and store it in the auth object
+  // console.log('This is the user id: ', response.body.id)
+  auth.token = response.body.token
+  auth.id = response.body.id
+  // await Blog.insertMany(helper.initialBlogs)
+  // const newBlog = {
+  //   title: 'Testing Post',
+  //   author: 'Test Author',
+  //   url: 'test.com',
+  // }
+
+  await api
+    .post('/api/blogs')
+    .set('authorization', `bearer ${auth.token}`)
+    .send(initialBlogs[0])
+  await api
+    .post('/api/blogs')
+    .set('authorization', `bearer ${auth.token}`)
+    .send(initialBlogs[1])
+  await api
+    .post('/api/blogs')
+    .set('authorization', `bearer ${auth.token}`)
+    .send(initialBlogs[2])
 })
 
 // Test 1: HTTP Method: GET
@@ -43,6 +94,7 @@ test('a valid blog can be added ', async () => {
 
   await api
     .post('/api/blogs')
+    .set('authorization', `bearer ${auth.token}`)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -62,6 +114,7 @@ test('title and url properties are missing from the request dat', async () => {
 
   await api
     .post('/api/blogs')
+    .set('authorization', `bearer ${auth.token}`)
     .send(newBlog)
     .expect(400)
     .expect('Content-Type', /application\/json/)
@@ -78,8 +131,10 @@ describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
-
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('authorization', `bearer ${auth.token}`)
+      .expect(204)
 
     const blogssAtEnd = await helper.blogsInDb()
 
@@ -111,6 +166,29 @@ describe('updating of a blog post', () => {
     expect(contents).toContain(16725422)
   })
 })
+
+
+// Test 8: HTTP Method: POST
+test('test to ensure adding a blog without token fails with the proper status code 401', async () => {
+  const newBlog = {
+    title: 'KLK Code Not Added',
+    author: 'Test Author',
+    url: 'test.com',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(401)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+
+  const contents = blogsAtEnd.map((n) => n.title)
+  expect(contents).not.toContain('KLK Code Not Added')
+})
+
 
 // Api Tests For Users
 
