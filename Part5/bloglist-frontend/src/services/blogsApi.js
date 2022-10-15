@@ -6,6 +6,6 @@ const getAll = () => {
   return request.then((response) => response.data)
 }
 
-const blogExports = { getAll }
+const apiSer = { getAll }
 
-export default blogExports
+export default apiSer

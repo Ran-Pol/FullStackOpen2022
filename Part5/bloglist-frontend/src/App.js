@@ -1,21 +1,65 @@
-import { useState, useEffect } from 'react'
+import React from 'react'
+import blogService from './services/blogsApi'
+import loginService from './services/login'
 import Blog from './components/Blog'
-import blogService from './services/blogs'
+import LoginForm from './components/LoginForm'
+import Notification from './components/Notificantion'
 
-const App = () => {
-  const [blogs, setBlogs] = useState([])
+function App() {
+  const [blogs, setBlogs] = React.useState([])
+  const [user, setUser] = React.useState(null)
+  const [errorMessage, setErrorMessage] = React.useState(null)
+  const [userLogin, setUserLogin] = React.useState({
+    username: '',
+    password: '',
+  })
 
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+  React.useEffect(() => {
+    blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
+
+  const listOfBlogs = blogs.map((blog) => <Blog key={blog.id} blog={blog} />)
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target
+    setUserLogin((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    try {
+      const user = await loginService(userLogin)
+      setUser(user)
+      setUserLogin({
+        username: '',
+        password: '',
+      })
+    } catch (exception) {
+      setErrorMessage('Wrong credentials')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
 
   return (
     <div>
-      <h2>blogs</h2>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+      {user ? (
+        <>
+          <h1>Blogs</h1>
+          <h2>{user.name} logged in</h2>
+          {listOfBlogs}
+        </>
+      ) : (
+        <>
+          <h2>Log in to aplication</h2>
+          <Notification message={errorMessage} />
+          <LoginForm
+            handleLogin={handleLogin}
+            handleOnChange={handleOnChange}
+            userLogin={userLogin}
+          />
+        </>
       )}
     </div>
   )
