@@ -25,6 +25,7 @@ const App = (props) => {
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
@@ -82,7 +83,10 @@ const App = (props) => {
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
       noteService.setToken(user.token)
       setUser(user)
-      setUserLogin((prev) => prev)
+      setUserLogin({
+        username: '',
+        password: '',
+      })
     } catch (exception) {
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
