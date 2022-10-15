@@ -11,9 +11,11 @@ const App = (props) => {
   const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [userLogin, setUserLogin] = useState({
+    username: '',
+    password: '',
+  })
 
   useEffect(() => {
     noteService.getAll().then((initialNotes) => {
@@ -29,7 +31,7 @@ const App = (props) => {
       noteService.setToken(user.token)
     }
   }, [])
-  
+
   const toggleImportanceOf = (id) => {
     const note = notes.find((n) => n.id === id)
     const changedNote = { ...note, important: !note.important }
@@ -76,15 +78,11 @@ const App = (props) => {
     event.preventDefault()
 
     try {
-      const user = await loginService.login({
-        username,
-        password,
-      })
+      const user = await loginService.login(userLogin)
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
       noteService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
+      setUserLogin((prev) => prev)
     } catch (exception) {
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
@@ -100,23 +98,35 @@ const App = (props) => {
         username
         <input
           type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
+          value={userLogin.username}
+          name="username"
+          onChange={handleChange}
         />
       </div>
       <div>
         password
         <input
           type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
+          value={userLogin.password}
+          name="password"
+          onChange={handleChange}
         />
       </div>
       <button type="submit">login</button>
     </form>
   )
+
+  // The Form Handle Functions
+  const handleChange = (event) => {
+    const { name, value } = event.target
+
+    setUserLogin((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      }
+    })
+  }
 
   const noteForm = () => (
     <form onSubmit={addNote}>
