@@ -4,11 +4,13 @@ import loginService from './services/login'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notificantion'
+import NewBlog from './components/NewBlog'
 
 function App() {
   const [blogs, setBlogs] = React.useState([])
   const [user, setUser] = React.useState(null)
   const [errorMessage, setErrorMessage] = React.useState(null)
+
   const [userLogin, setUserLogin] = React.useState({
     username: '',
     password: '',
@@ -24,6 +26,7 @@ function App() {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
+      blogService.setToken(user.token)
       setUser(user)
     }
   }, [])
@@ -44,6 +47,7 @@ function App() {
     try {
       const user = await loginService(userLogin)
       window.localStorage.setItem('loggedBlogUser', JSON.stringify(user))
+      blogService.setToken(user.token)
       setUser(user)
       setUserLogin({
         username: '',
@@ -66,6 +70,12 @@ function App() {
             <h2>{user.name} logged in</h2>
             <button onClick={userLogOut}>Logout</button>
           </div>
+          <Notification message={errorMessage} />
+          <NewBlog
+            blogService={blogService}
+            setErrorMessage={setErrorMessage}
+            setBlogs={setBlogs}
+          />
           {listOfBlogs}
         </>
       ) : (
