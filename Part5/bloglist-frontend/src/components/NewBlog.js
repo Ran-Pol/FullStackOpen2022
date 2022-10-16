@@ -1,6 +1,6 @@
 import React from 'react'
 
-const NewBlog = ({ blogService, setErrorMessage, setBlogs }) => {
+const NewBlog = ({ blogService, notify, setBlogs }) => {
   const [newBlog, setNewBlog] = React.useState({
     title: '',
     author: '',
@@ -24,12 +24,9 @@ const NewBlog = ({ blogService, setErrorMessage, setBlogs }) => {
         author: '',
         url: '',
       })
+      notify(`A new blog: ${newBlog.title} was added!`)
     } catch (exception) {
-      console.log(exception.message)
-      setErrorMessage('New blog was not created')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      notify(exception.message, 'alert')
     }
   }
 

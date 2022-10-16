@@ -1,4 +1,5 @@
 import React from 'react'
+import './App.css'
 import blogService from './services/blogsApi'
 import loginService from './services/login'
 import Blog from './components/Blog'
@@ -9,7 +10,7 @@ import NewBlog from './components/NewBlog'
 function App() {
   const [blogs, setBlogs] = React.useState([])
   const [user, setUser] = React.useState(null)
-  const [errorMessage, setErrorMessage] = React.useState(null)
+  const [notification, setNotification] = React.useState(null)
 
   const [userLogin, setUserLogin] = React.useState({
     username: '',
@@ -53,14 +54,19 @@ function App() {
         username: '',
         password: '',
       })
+      notify('Welcome back!')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      notify('Wrong credentials', 'alert')
     }
   }
 
+  // Notification message
+  const notify = (message, type = 'info') => {
+    setNotification({ message, type })
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+  }
   return (
     <div>
       {user ? (
@@ -70,10 +76,10 @@ function App() {
             <h2>{user.name} logged in</h2>
             <button onClick={userLogOut}>Logout</button>
           </div>
-          <Notification message={errorMessage} />
+          <Notification notification={notification} />
           <NewBlog
             blogService={blogService}
-            setErrorMessage={setErrorMessage}
+            notify={notify}
             setBlogs={setBlogs}
           />
           {listOfBlogs}
@@ -81,7 +87,7 @@ function App() {
       ) : (
         <>
           <h2>Log in to aplication</h2>
-          <Notification message={errorMessage} />
+          <Notification notification={notification} />
           <LoginForm
             handleLogin={handleLogin}
             handleOnChange={handleOnChange}
