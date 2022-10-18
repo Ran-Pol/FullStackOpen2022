@@ -1,6 +1,6 @@
 import React from 'react'
 
-const NewBlog = ({ blogService, notify, setBlogs }) => {
+const NewBlog = ({ createBlog }) => {
   const [newBlog, setNewBlog] = React.useState({
     title: '',
     author: '',
@@ -16,18 +16,12 @@ const NewBlog = ({ blogService, notify, setBlogs }) => {
   }
 
   const handleNewBlog = async () => {
-    try {
-      const newblog = await blogService.create(newBlog)
-      setBlogs((prev) => [...prev, newblog])
-      setNewBlog({
-        title: '',
-        author: '',
-        url: '',
-      })
-      notify(`A new blog: ${newBlog.title} was added!`)
-    } catch (exception) {
-      notify(exception.message, 'alert')
-    }
+    createBlog(newBlog)
+    setNewBlog({
+      title: '',
+      author: '',
+      url: '',
+    })
   }
 
   return (

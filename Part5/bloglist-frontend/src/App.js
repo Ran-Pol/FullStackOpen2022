@@ -6,6 +6,7 @@ import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notificantion'
 import NewBlog from './components/NewBlog'
+import Togglable from './components/Togglable'
 
 function App() {
   const [blogs, setBlogs] = React.useState([])
@@ -46,6 +47,18 @@ function App() {
     }
   }
 
+  const addNewBlog = async (blogObjet) => {
+    blogFormRef.current.toggleVisibility()
+    try {
+      const newblog = await blogService.create(blogObjet)
+      setBlogs((prev) => [...prev, newblog])
+
+      notify(`A new blog: ${newblog.title} was added!`)
+    } catch (exception) {
+      notify(exception.message, 'alert')
+    }
+  }
+
   // Notification message
   const notify = (message, type = 'info') => {
     setNotification({ message, type })
@@ -54,7 +67,13 @@ function App() {
     }, 5000)
   }
 
-   
+  const blogFormRef = React.useRef()
+  const blogForm = () => (
+    <Togglable buttonLabel={'Create New Blog'} ref={blogFormRef}>
+      <NewBlog createBlog={addNewBlog} />
+    </Togglable>
+  )
+
   return (
     <div>
       {user ? (
@@ -65,11 +84,7 @@ function App() {
             <button onClick={userLogOut}>Logout</button>
           </div>
           <Notification notification={notification} />
-          <NewBlog
-            blogService={blogService}
-            notify={notify}
-            setBlogs={setBlogs}
-          />
+          {blogForm()}
           {listOfBlogs}
         </>
       ) : (
