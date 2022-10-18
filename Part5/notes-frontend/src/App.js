@@ -6,6 +6,8 @@ import Footer from './components/Footer'
 import noteService from './services/notes'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
+import NoteForm from './components/NoteForm'
 
 const App = (props) => {
   const [notes, setNotes] = useState([])
@@ -13,7 +15,6 @@ const App = (props) => {
   const [showAll, setShowAll] = useState(true)
   const [notification, setNotification] = useState(null)
   const [user, setUser] = useState(null)
-  const [loginVisible, setLoginVisible] = useState(false)
   const [userLogin, setUserLogin] = useState({
     username: '',
     password: '',
@@ -106,38 +107,13 @@ const App = (props) => {
     })
   }
 
-  const noteForm = () => (
-    <form onSubmit={addNote}>
-      <input value={newNote} onChange={handleNoteChange} />
-      <button type="submit">save</button>
-    </form>
-  )
-
   const notify = (message, type = 'info') => {
     setNotification({ message, type })
     setTimeout(() => {
       setNotification(null)
     }, 5000)
   }
-  const loginFormVisibility = () => {
-    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
-    const shownWhenVisible = { display: loginVisible ? '' : 'none' }
-    return (
-      <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>Log in</button>
-        </div>
-        <div style={shownWhenVisible}>
-          <LoginForm
-            handleLogin={handleLogin}
-            userLogin={userLogin}
-            handleChange={handleChange}
-          />
-          <button onClick={() => setLoginVisible(false)}>cancel</button>
-        </div>
-      </div>
-    )
-  }
+
   return (
     <div>
       <h1>Notes</h1>
@@ -147,11 +123,23 @@ const App = (props) => {
       {user !== null && noteForm()} */}
 
       {user === null ? (
-        loginFormVisibility()
+        <Togglable buttonLabel="sign in">
+          <LoginForm
+            handleLogin={handleLogin}
+            userLogin={userLogin}
+            handleChange={handleChange}
+          />
+        </Togglable>
       ) : (
         <div>
           <p>{user.name} logged-in</p>
-          {noteForm()}
+          <Togglable buttonLabel="new note">
+            <NoteForm
+              addNote={addNote}
+              newNote={newNote}
+              handleNoteChange={handleNoteChange}
+            />
+          </Togglable>
         </div>
       )}
 
