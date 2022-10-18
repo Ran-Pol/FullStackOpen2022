@@ -12,11 +12,6 @@ function App() {
   const [user, setUser] = React.useState(null)
   const [notification, setNotification] = React.useState(null)
 
-  const [userLogin, setUserLogin] = React.useState({
-    username: '',
-    password: '',
-  })
-
   // useEffect to fetch all blog post data and setting to state variable
   React.useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -34,26 +29,17 @@ function App() {
 
   const listOfBlogs = blogs.map((blog) => <Blog key={blog.id} blog={blog} />)
 
-  const handleOnChange = (e) => {
-    const { name, value } = e.target
-    setUserLogin((prev) => ({ ...prev, [name]: value }))
-  }
   const userLogOut = () => {
     window.localStorage.removeItem('loggedBlogUser')
     setUser((prev) => !prev)
   }
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
+  const handleLogin = async (loginObject) => {
     try {
-      const user = await loginService(userLogin)
+      const user = await loginService(loginObject)
       window.localStorage.setItem('loggedBlogUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
-      setUserLogin({
-        username: '',
-        password: '',
-      })
       notify('Welcome back!')
     } catch (exception) {
       notify('Wrong credentials', 'alert')
@@ -67,6 +53,8 @@ function App() {
       setNotification(null)
     }, 5000)
   }
+
+   
   return (
     <div>
       {user ? (
@@ -88,11 +76,7 @@ function App() {
         <>
           <h2>Log in to aplication</h2>
           <Notification notification={notification} />
-          <LoginForm
-            handleLogin={handleLogin}
-            handleOnChange={handleOnChange}
-            userLogin={userLogin}
-          />
+          <LoginForm createLogin={handleLogin} />
         </>
       )}
     </div>
