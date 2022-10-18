@@ -14,10 +14,6 @@ const App = (props) => {
   const [showAll, setShowAll] = useState(true)
   const [notification, setNotification] = useState(null)
   const [user, setUser] = useState(null)
-  const [userLogin, setUserLogin] = useState({
-    username: '',
-    password: '',
-  })
 
   useEffect(() => {
     noteService.getAll().then((initialNotes) => {
@@ -64,34 +60,16 @@ const App = (props) => {
     ? notes
     : notes.filter((note) => note.important === true)
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-
+  const handleLogin = async (loginObject) => {
     try {
-      const user = await loginService.login(userLogin)
+      const user = await loginService.login(loginObject)
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
       noteService.setToken(user.token)
       setUser(user)
-      setUserLogin({
-        username: '',
-        password: '',
-      })
       notify(`Welcome back ${user.name}`)
     } catch (exception) {
       notify('Wrong credentials', 'alert')
     }
-  }
-
-  // The Form Handle Functions
-  const handleChange = (event) => {
-    const { name, value } = event.target
-
-    setUserLogin((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      }
-    })
   }
 
   const notify = (message, type = 'info') => {
@@ -111,11 +89,7 @@ const App = (props) => {
 
       {user === null ? (
         <Togglable buttonLabel="sign in">
-          <LoginForm
-            handleLogin={handleLogin}
-            userLogin={userLogin}
-            handleChange={handleChange}
-          />
+          <LoginForm createLogin={handleLogin} />
         </Togglable>
       ) : (
         <div>
