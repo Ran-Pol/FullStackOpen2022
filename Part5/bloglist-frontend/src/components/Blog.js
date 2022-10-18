@@ -14,7 +14,7 @@ const Blog = ({ blog }) => {
       {viewAll ? (
         <div style={blogStyle}>
           <p>
-            {blog.title} {blog.author}
+            {blog.title} {blog.author}{' '}
             <button onClick={() => setViewAll((prev) => !prev)}>view</button>
           </p>
         </div>
@@ -26,7 +26,10 @@ const Blog = ({ blog }) => {
           </p>
 
           <p>{blog.url}</p>
-          <p>{blog.likes}</p>
+          <p>
+            {blog.likes}{' '}
+            <button onClick={() => setViewAll((prev) => !prev)}>like</button>
+          </p>
           <p>{blog.user.name}</p>
         </div>
       )}
