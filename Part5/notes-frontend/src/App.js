@@ -5,6 +5,7 @@ import Footer from './components/Footer'
 // Notes Services
 import noteService from './services/notes'
 import loginService from './services/login'
+import LoginForm from './components/LoginForm'
 
 const App = (props) => {
   const [notes, setNotes] = useState([])
@@ -12,6 +13,7 @@ const App = (props) => {
   const [showAll, setShowAll] = useState(true)
   const [notification, setNotification] = useState(null)
   const [user, setUser] = useState(null)
+  const [loginVisible, setLoginVisible] = useState(false)
   const [userLogin, setUserLogin] = useState({
     username: '',
     password: '',
@@ -92,31 +94,6 @@ const App = (props) => {
     }
   }
 
-  // Let's add two helper functions to the App component for generating the forms:
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={userLogin.username}
-          name="username"
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={userLogin.password}
-          name="password"
-          onChange={handleChange}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  )
-
   // The Form Handle Functions
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -142,7 +119,25 @@ const App = (props) => {
       setNotification(null)
     }, 5000)
   }
-
+  const loginFormVisibility = () => {
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    const shownWhenVisible = { display: loginVisible ? '' : 'none' }
+    return (
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>Log in</button>
+        </div>
+        <div style={shownWhenVisible}>
+          <LoginForm
+            handleLogin={handleLogin}
+            userLogin={userLogin}
+            handleChange={handleChange}
+          />
+          <button onClick={() => setLoginVisible(false)}>cancel</button>
+        </div>
+      </div>
+    )
+  }
   return (
     <div>
       <h1>Notes</h1>
@@ -152,7 +147,7 @@ const App = (props) => {
       {user !== null && noteForm()} */}
 
       {user === null ? (
-        loginForm()
+        loginFormVisibility()
       ) : (
         <div>
           <p>{user.name} logged-in</p>
