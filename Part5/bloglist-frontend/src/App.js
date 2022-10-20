@@ -37,6 +37,7 @@ function App() {
       key={blog.id}
       blog={blog}
       updateBlog={() => updateBlog(blog.id, blog)}
+      deleteBlog={() => deleteBlog(blog.id)}
     />
   ))
 
@@ -84,6 +85,21 @@ function App() {
       // notify(`Blog: ${newblog.title} was updated!`)
     } catch (exception) {
       notify(exception.message, 'alert')
+    }
+  }
+
+  const deleteBlog = async (id) => {
+    if (window.confirm('Do you really want to delete this blog?')) {
+      try {
+        const removedBlog = await blogService.deleteBlog(id)
+        setBlogs((prev) => {
+          return prev.filter((blog) => blog.id !== id)
+        })
+
+        notify(`Blog: ${removedBlog.title} was deleted!`)
+      } catch (exception) {
+        notify(exception.message, 'alert')
+      }
     }
   }
 

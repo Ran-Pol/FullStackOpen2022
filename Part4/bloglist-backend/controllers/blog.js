@@ -50,8 +50,8 @@ blogsRouter.delete('/:id', userExtractor, async (req, res) => {
   }
 
   if (blogFound.user.toString() === user.id) {
-    await Blog.findByIdAndDelete(blogID)
-    return res.status(204).end()
+    const removedBlog = await Blog.findByIdAndDelete(blogID)
+    return res.status(200).json(removedBlog)
   }
   return res
     .status(400)

@@ -21,11 +21,19 @@ const create = async (newObject) => {
   return response.data
 }
 
+const deleteBlog = async (id) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  const response = await axios.delete(`${baseUrl}/${id}`, config)
+  return response.data
+}
 const update = async (id, blogObject) => {
   const response = await axios.put(`${baseUrl}/${id}`, blogObject)
   return response.data
 }
 
-const apiSer = { setToken, getAll, create, update }
+const apiSer = { setToken, getAll, create, update, deleteBlog }
 
 export default apiSer
