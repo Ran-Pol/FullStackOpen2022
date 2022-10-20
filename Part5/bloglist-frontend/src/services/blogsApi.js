@@ -21,6 +21,11 @@ const create = async (newObject) => {
   return response.data
 }
 
-const apiSer = { setToken, getAll, create }
+const update = async (id, blogObject) => {
+  const response = await axios.put(`${baseUrl}/${id}`, blogObject)
+  return response.data
+}
+
+const apiSer = { setToken, getAll, create, update }
 
 export default apiSer

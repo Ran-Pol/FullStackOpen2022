@@ -28,7 +28,13 @@ function App() {
     }
   }, [])
 
-  const listOfBlogs = blogs.map((blog) => <Blog key={blog.id} blog={blog} />)
+  const listOfBlogs = blogs.map((blog) => (
+    <Blog
+      key={blog.id}
+      blog={blog}
+      updateBlog={() => updateBlog(blog.id, blog)}
+    />
+  ))
 
   const userLogOut = () => {
     window.localStorage.removeItem('loggedBlogUser')
@@ -54,6 +60,22 @@ function App() {
       setBlogs((prev) => [...prev, newblog])
 
       notify(`A new blog: ${newblog.title} was added!`)
+    } catch (exception) {
+      notify(exception.message, 'alert')
+    }
+  }
+
+  const updateBlog = async (id, blogObjet) => {
+    try {
+      const newblog = await blogService.update(id, blogObjet)
+      setBlogs((prev) => {
+        const filterList = prev.map((blog) =>
+          blog.id !== newblog.id ? blog : newblog
+        )
+        return filterList
+      })
+
+      notify(`Blog: ${newblog.title} was updated!`)
     } catch (exception) {
       notify(exception.message, 'alert')
     }

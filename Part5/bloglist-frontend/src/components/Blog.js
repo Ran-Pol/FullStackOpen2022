@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateBlog }) => {
   const [viewAll, setViewAll] = React.useState(true)
   const blogStyle = {
     paddingTop: 10,
@@ -28,7 +28,7 @@ const Blog = ({ blog }) => {
           <p>{blog.url}</p>
           <p>
             {blog.likes}{' '}
-            <button onClick={() => setViewAll((prev) => !prev)}>like</button>
+            <button onClick={updateBlog}>like</button>
           </p>
           <p>{blog.user.name}</p>
         </div>
