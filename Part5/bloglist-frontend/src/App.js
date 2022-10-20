@@ -15,7 +15,11 @@ function App() {
 
   // useEffect to fetch all blog post data and setting to state variable
   React.useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    blogService.getAll().then((blogs) =>
+      setBlogs(() => {
+        return blogs.sort((blogOne, blogTwo) => blogTwo.likes - blogOne.likes)
+      })
+    )
   }, [])
 
   // Check if there is a user in the localstorage
@@ -72,10 +76,12 @@ function App() {
         const filterList = prev.map((blog) =>
           blog.id !== newblog.id ? blog : newblog
         )
-        return filterList
+        return filterList.sort(
+          (blogOne, blogTwo) => blogTwo.likes - blogOne.likes
+        )
       })
 
-      notify(`Blog: ${newblog.title} was updated!`)
+      // notify(`Blog: ${newblog.title} was updated!`)
     } catch (exception) {
       notify(exception.message, 'alert')
     }
