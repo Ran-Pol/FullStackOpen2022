@@ -70,7 +70,10 @@ blogsRouter.put('/:id', async (req, res) => {
       likes: likes + 1,
     },
     { runValidators: true, new: true }
-  )
+  ).populate('user', {
+    username: 1,
+    name: 1,
+  })
   res.status(200).json(updatedBlog)
 })
 module.exports = blogsRouter
