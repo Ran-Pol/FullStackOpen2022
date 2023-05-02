@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { createNote, toggleImportanceOf } from './reducers/noteReducer'
+import { createNote, toggleImportanceOf } from '../reducers/noteReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
 const App = () => {
