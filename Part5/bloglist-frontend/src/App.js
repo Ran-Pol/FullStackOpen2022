@@ -103,7 +103,6 @@ function App() {
     }
   }
 
-  // Notification message
   const notify = (message, type = 'info') => {
     setNotification({ message, type })
     setTimeout(() => {
