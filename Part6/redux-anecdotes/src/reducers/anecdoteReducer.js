@@ -24,6 +24,8 @@ const reducer = (state = initialState, action) => {
   console.log('action', action)
 
   switch (action.type) {
+    case 'newNote':
+      return [...state, action.payload]
     case 'vote': {
       const id = action.payload.id
       const noteToChange = state.find((n) => n.id === id)
@@ -35,6 +37,17 @@ const reducer = (state = initialState, action) => {
     }
     default:
       return state
+  }
+}
+
+export const createNote = (content) => {
+  return {
+    type: 'newNote',
+    payload: {
+      content,
+      votes: 0,
+      id: getId(),
+    },
   }
 }
 
