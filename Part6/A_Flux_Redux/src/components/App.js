@@ -9,9 +9,10 @@ import { useDispatch } from 'react-redux'
 const App = () => {
   const dispatch = useDispatch()
   useEffect(() => {
+    console.log("Inside useEffect")
     noteService.getAll().then((notes) => dispatch(setNotes(notes)))
   }, [dispatch])
-
+console.log('klk')
   return (
     <div>
       <NewNote />
