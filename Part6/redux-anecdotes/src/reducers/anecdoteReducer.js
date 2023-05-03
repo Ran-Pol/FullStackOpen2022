@@ -30,7 +30,7 @@ const noteSlice = createSlice({
       })
     },
     voteFor: (state, action) => {
-      const id = action.payload.id
+      const id = action.payload
       const noteToChange = state.find((n) => n.id === id)
       noteToChange.votes += 1
     },
