@@ -3,6 +3,7 @@ import { voteFor } from '../reducers/anecdoteReducer'
 
 const AnecdoteList = () => {
   const { anecdotes, filter } = useSelector((state) => state)
+
   const dispatch = useDispatch()
 
   const vote = (id) => {
@@ -12,7 +13,7 @@ const AnecdoteList = () => {
 
   return (
     <>
-      {anecdotes
+      {[...anecdotes]
         .sort((a, b) => b.votes - a.votes)
         .filter((anecdote) =>
           anecdote.content.toLowerCase().includes(filter.toLowerCase())
