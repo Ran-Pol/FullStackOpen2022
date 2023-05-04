@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { setNotification } from './notificationReducer'
+import anecdotesService from '../services/anecdotes'
 
 const noteSlice = createSlice({
   name: 'notes',
@@ -19,6 +20,8 @@ const noteSlice = createSlice({
   },
 })
 
+export const { setNotes } = noteSlice.actions
+
 export const createNote = (content) => {
   return (dispatch) => {
     dispatch(noteSlice.actions.createNote(content))
@@ -33,5 +36,11 @@ export const voteFor = (id) => {
   }
 }
 
-export const { setNotes } = noteSlice.actions
+export const initializeNotes = () => {
+  return async (dispatch) => {
+    const anecdotes = await anecdotesService.getAll()
+    dispatch(setNotes(anecdotes))
+  }
+}
+
 export default noteSlice.reducer
