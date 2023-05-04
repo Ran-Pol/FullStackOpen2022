@@ -6,9 +6,6 @@ const noteSlice = createSlice({
   name: 'notes',
   initialState: [],
   reducers: {
-    createNote: (state, action) => {
-      state.push(action.payload)
-    },
     voteFor: (state, action) => {
       const id = action.payload
       const noteToChange = state.find((n) => n.id === id)
@@ -17,14 +14,18 @@ const noteSlice = createSlice({
     setNotes(_, action) {
       return action.payload
     },
+    appendNote: (state, action) => {
+      state.push(action.payload)
+    },
   },
 })
 
-export const { setNotes } = noteSlice.actions
+export const { setNotes, appendNote } = noteSlice.actions
 
 export const createNote = (content) => {
-  return (dispatch) => {
-    dispatch(noteSlice.actions.createNote(content))
+  return async (dispatch) => {
+    const newNote = await anecdotesService.createNew(content)
+    dispatch(appendNote(newNote))
     dispatch(setNotification({ message: `Created '${content}'`, timeout: 5 }))
   }
 }
