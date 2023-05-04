@@ -7,12 +7,6 @@
 - [x] Part 3: Programming a server with NodeJS and Express
 - [x] Part 4: Testing Express servers, user administration
 - [x] Part 5: Testing React apps
+- [x] Part 6: State management with Redux
 ###### Pending:
-- [ ] Part 6: State management with Redux
 - [ ] Part 7: React router, custom hooks, styling app with CSS and webpack
-- [ ] Part 8: GraphQL 
-- [ ] Part 9: Typescript
-- [ ] Part 10: React Native
-- [ ] Part 11: CI/CD
-- [ ] Part 12: Containers
-- [ ] Part 13: Using relational databases
