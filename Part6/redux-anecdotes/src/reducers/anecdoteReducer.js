@@ -31,7 +31,8 @@ export const createNote = (content) => {
 }
 
 export const voteFor = (id) => {
-  return (dispatch) => {
+  return async (dispatch) => {
+    await anecdotesService.voteUpdate(id)
     dispatch(noteSlice.actions.voteFor(id))
     dispatch(setNotification({ message: `Voted for '${id}'`, timeout: 5 }))
   }
